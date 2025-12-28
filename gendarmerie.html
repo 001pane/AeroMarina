@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Gendarmerie RP - Tableau de bord</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="img/logo.png" alt="Logo AéroMarina" class="logo">
+    </a>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="avions.html">Avions</a></li>
+        <li><a href="bateaux.html">Bateaux</a></li>
+        <li><a href="licences.html">Licences</a></li>
+        <li><a href="reglementation.html">Règlementation</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="gendarmerie.html" class="active">Gendarmerie</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="dashboard">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Gestion opérationnelle</p>
+        <h1>Quartier général Gendarmerie</h1>
+        <p>Supervisez en direct vos effectifs, vos dossiers et vos procédures depuis un seul endroit. Toutes les modifications sont stockées localement pour faciliter vos sessions roleplay.</p>
+        <div class="hero-actions">
+          <button id="add-demo" class="cta">Charger des exemples</button>
+          <button id="reset-data" class="ghost">Réinitialiser les données</button>
+        </div>
+      </div>
+      <div class="stat-box">
+        <div>
+          <p class="stat-label">Agents en service</p>
+          <p id="count-agents" class="stat-value">0</p>
+        </div>
+        <div>
+          <p class="stat-label">Interventions actives</p>
+          <p id="count-dispatch" class="stat-value">0</p>
+        </div>
+        <div>
+          <p class="stat-label">Dossiers ouverts</p>
+          <p id="count-casiers" class="stat-value">0</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <header class="card-header">
+          <div>
+            <p class="eyebrow">Ressources humaines</p>
+            <h2>Effectifs & heures de présence</h2>
+          </div>
+        </header>
+        <form id="form-agent" class="inline-form">
+          <input type="text" name="matricule" placeholder="Matricule" required>
+          <input type="text" name="nom" placeholder="Nom / indicatif" required>
+          <input type="text" name="role" placeholder="Unité / rôle" required>
+          <input type="number" name="heures" placeholder="Heures" min="0" value="0">
+          <button type="submit" class="cta small">Ajouter</button>
+        </form>
+        <div id="list-agents" class="pill-list"></div>
+      </div>
+
+      <div class="card">
+        <header class="card-header">
+          <div>
+            <p class="eyebrow">Dispatch</p>
+            <h2>Véhicules & statuts en direct</h2>
+          </div>
+        </header>
+        <form id="form-dispatch" class="inline-form">
+          <input type="text" name="appel" placeholder="Appel radio" required>
+          <input type="text" name="vehicule" placeholder="Véhicule" required>
+          <input type="text" name="equipe" placeholder="Équipe" required>
+          <select name="statut">
+            <option>Disponible</option>
+            <option>En mission</option>
+            <option>Indisponible</option>
+          </select>
+          <button type="submit" class="cta small">Enregistrer</button>
+        </form>
+        <div id="list-dispatch" class="timeline"></div>
+      </div>
+
+      <div class="card">
+        <header class="card-header">
+          <div>
+            <p class="eyebrow">Règles</p>
+            <h2>Règlement interne</h2>
+          </div>
+        </header>
+        <form id="form-regle" class="inline-form">
+          <input type="text" name="titre" placeholder="Titre de la règle" required>
+          <input type="text" name="detail" placeholder="Description" required>
+          <button type="submit" class="cta small">Ajouter</button>
+        </form>
+        <ul id="list-regles" class="tag-list"></ul>
+      </div>
+
+      <div class="card">
+        <header class="card-header">
+          <div>
+            <p class="eyebrow">Sanctions</p>
+            <h2>Catalogue des amendes</h2>
+          </div>
+        </header>
+        <form id="form-amende" class="inline-form">
+          <input type="text" name="motif" placeholder="Motif" required>
+          <input type="number" name="montant" placeholder="Montant (€)" min="0" required>
+          <button type="submit" class="cta small">Ajouter</button>
+        </form>
+        <ul id="list-amendes" class="tag-list"></ul>
+      </div>
+
+      <div class="card wide">
+        <header class="card-header">
+          <div>
+            <p class="eyebrow">Judiciaire</p>
+            <h2>Casiers & amendes imputables</h2>
+          </div>
+        </header>
+        <form id="form-casier" class="inline-form">
+          <input type="text" name="joueur" placeholder="Nom du joueur" required>
+          <input type="text" name="fait" placeholder="Infraction" required>
+          <select name="amende" required>
+            <option value="">Amende associée</option>
+          </select>
+          <textarea name="notes" placeholder="Notes (preuves, circonstances)"></textarea>
+          <button type="submit" class="cta small">Créer le casier</button>
+        </form>
+        <div id="list-casiers" class="table"></div>
+      </div>
+
+      <div class="card">
+        <header class="card-header">
+          <div>
+            <p class="eyebrow">Auditions</p>
+            <h2>Compte-rendus</h2>
+          </div>
+        </header>
+        <form id="form-audition" class="inline-form">
+          <input type="text" name="suspect" placeholder="Suspect / témoin" required>
+          <input type="text" name="agent" placeholder="Agent rédacteur" required>
+          <textarea name="resume" placeholder="Résumé"></textarea>
+          <button type="submit" class="cta small">Enregistrer</button>
+        </form>
+        <div id="list-auditions" class="note-list"></div>
+      </div>
+
+      <div class="card">
+        <header class="card-header">
+          <div>
+            <p class="eyebrow">Archives</p>
+            <h2>Documents & pièces</h2>
+          </div>
+        </header>
+        <form id="form-archive" class="inline-form">
+          <input type="text" name="reference" placeholder="Référence" required>
+          <input type="text" name="categorie" placeholder="Catégorie" required>
+          <textarea name="contenu" placeholder="Résumé du document"></textarea>
+          <button type="submit" class="cta small">Archiver</button>
+        </form>
+        <div id="list-archives" class="note-list"></div>
+      </div>
+
+      <div class="card">
+        <header class="card-header">
+          <div>
+            <p class="eyebrow">Tribunal</p>
+            <h2>Dossiers d'audience</h2>
+          </div>
+        </header>
+        <form id="form-tribunal" class="inline-form">
+          <input type="text" name="numero" placeholder="Numéro de dossier" required>
+          <input type="text" name="juge" placeholder="Magistrat / juge" required>
+          <textarea name="objet" placeholder="Objet de l'affaire"></textarea>
+          <button type="submit" class="cta small">Programmer</button>
+        </form>
+        <div id="list-tribunal" class="note-list"></div>
+      </div>
+
+      <div class="card">
+        <header class="card-header">
+          <div>
+            <p class="eyebrow">Fourrière</p>
+            <h2>Véhicules saisis</h2>
+          </div>
+        </header>
+        <form id="form-fourriere" class="inline-form">
+          <input type="text" name="plaque" placeholder="Immatriculation" required>
+          <input type="text" name="modele" placeholder="Modèle" required>
+          <input type="text" name="motif" placeholder="Motif de saisie" required>
+          <input type="number" name="frais" placeholder="Frais (€)" min="0" value="0">
+          <button type="submit" class="cta small">Ajouter</button>
+        </form>
+        <div id="list-fourriere" class="timeline"></div>
+      </div>
+
+      <div class="card wide">
+        <header class="card-header">
+          <div>
+            <p class="eyebrow">Administration</p>
+            <h2>Journal & actions sensibles</h2>
+          </div>
+        </header>
+        <div id="list-logs" class="log-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Gendarmerie RP - Tableau de bord opérationnel</p>
+  </footer>
+
+  <script>
+    const STORAGE_KEY = 'gendarmerieState';
+
+    const initialState = {
+      agents: [],
+      dispatch: [],
+      regles: [],
+      amendes: [],
+      casiers: [],
+      auditions: [],
+      archives: [],
+      tribunal: [],
+      fourriere: [],
+      logs: []
+    };
+
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : structuredClone(initialState);
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function logAction(texte) {
+      const entry = { texte, date: new Date().toLocaleString('fr-FR') };
+      state.logs.unshift(entry);
+      saveState();
+      renderLogs();
+    }
+
+    const state = loadState();
+
+    document.getElementById('add-demo').addEventListener('click', () => {
+      state.agents = [
+        { matricule: 'GND-101', nom: 'Capitaine Durand', role: 'Commandant', heures: 12 },
+        { matricule: 'GND-245', nom: 'Brigadier Rosa', role: 'Patrouille Alpha', heures: 6 }
+      ];
+      state.dispatch = [
+        { appel: 'Alpha-1', vehicule: 'SUV Intercepteur', equipe: 'Rosa / Malik', statut: 'En mission' },
+        { appel: 'Bravo-2', vehicule: 'Moto rapide', equipe: 'Helio', statut: 'Disponible' }
+      ];
+      state.regles = [
+        { titre: 'Port des équipements', detail: 'Gilet pare-balles et caméra embarquée obligatoires en intervention.' },
+        { titre: 'Usage de la force', detail: 'Gradation obligatoire et rappel vocal avant toute action létale.' }
+      ];
+      state.amendes = [
+        { motif: 'Excès de vitesse', montant: 150 },
+        { motif: 'Refus d\'obtempérer', montant: 500 }
+      ];
+      state.casiers = [
+        { joueur: 'Joueur A', fait: 'Refus d\'obtempérer', amende: 'Refus d\'obtempérer', montant: 500, notes: 'Course-poursuite de 5 minutes' }
+      ];
+      state.auditions = [
+        { suspect: 'Témoin L. Helio', agent: 'Brigadier Rosa', resume: 'Déposition concernant un accident de circulation', date: new Date().toLocaleDateString('fr-FR') }
+      ];
+      state.archives = [
+        { reference: 'ARCH-2025-001', categorie: 'Rapport', contenu: 'Synthèse hebdomadaire des interventions.' }
+      ];
+      state.tribunal = [
+        { numero: 'TRIB-14', juge: 'Juge Ferret', objet: 'Audience pour conduite dangereuse' }
+      ];
+      state.fourriere = [
+        { plaque: 'AA-123-AA', modele: 'SUV noir', motif: 'Stationnement gênant', frais: 200, statut: 'En fourrière' }
+      ];
+      logAction('Jeu de données démo chargé.');
+      renderAll();
+    });
+
+    document.getElementById('reset-data').addEventListener('click', () => {
+      Object.assign(state, structuredClone(initialState));
+      saveState();
+      renderAll();
+      logAction('Base locale réinitialisée.');
+    });
+
+    document.getElementById('form-agent').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      state.agents.push({
+        matricule: data.matricule,
+        nom: data.nom,
+        role: data.role,
+        heures: Number(data.heures || 0)
+      });
+      saveState();
+      renderAgents();
+      logAction(`Agent ${data.matricule} ajouté.`);
+      e.target.reset();
+    });
+
+    document.getElementById('form-dispatch').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      state.dispatch.push({
+        appel: data.appel,
+        vehicule: data.vehicule,
+        equipe: data.equipe,
+        statut: data.statut
+      });
+      saveState();
+      renderDispatch();
+      logAction(`Dispatch ${data.appel} enregistré (${data.statut}).`);
+      e.target.reset();
+    });
+
+    document.getElementById('form-regle').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      state.regles.push({ titre: data.titre, detail: data.detail });
+      saveState();
+      renderRegles();
+      logAction(`Règle ajoutée : ${data.titre}.`);
+      e.target.reset();
+    });
+
+    document.getElementById('form-amende').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      state.amendes.push({ motif: data.motif, montant: Number(data.montant) });
+      saveState();
+      renderAmendes();
+      renderCasierSelect();
+      logAction(`Amende ajoutée : ${data.motif} (${data.montant}€).`);
+      e.target.reset();
+    });
+
+    document.getElementById('form-casier').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      const amende = state.amendes.find(a => a.motif === data.amende);
+      state.casiers.unshift({
+        joueur: data.joueur,
+        fait: data.fait,
+        amende: data.amende,
+        montant: amende ? amende.montant : 0,
+        notes: data.notes || ''
+      });
+      saveState();
+      renderCasiers();
+      logAction(`Casier créé pour ${data.joueur} (${data.fait}).`);
+      e.target.reset();
+    });
+
+    document.getElementById('form-audition').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      state.auditions.unshift({
+        suspect: data.suspect,
+        agent: data.agent,
+        resume: data.resume || '—',
+        date: new Date().toLocaleDateString('fr-FR')
+      });
+      saveState();
+      renderAuditions();
+      logAction(`Audition enregistrée pour ${data.suspect}.`);
+      e.target.reset();
+    });
+
+    document.getElementById('form-archive').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      state.archives.unshift({
+        reference: data.reference,
+        categorie: data.categorie,
+        contenu: data.contenu || '—'
+      });
+      saveState();
+      renderArchives();
+      logAction(`Archive ${data.reference} ajoutée.`);
+      e.target.reset();
+    });
+
+    document.getElementById('form-tribunal').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      state.tribunal.unshift({
+        numero: data.numero,
+        juge: data.juge,
+        objet: data.objet || '—'
+      });
+      saveState();
+      renderTribunal();
+      logAction(`Dossier tribunal ${data.numero} programmé.`);
+      e.target.reset();
+    });
+
+    document.getElementById('form-fourriere').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      state.fourriere.push({
+        plaque: data.plaque,
+        modele: data.modele,
+        motif: data.motif,
+        frais: Number(data.frais || 0),
+        statut: 'En fourrière'
+      });
+      saveState();
+      renderFourriere();
+      logAction(`Véhicule ${data.plaque} placé en fourrière.`);
+      e.target.reset();
+    });
+
+    function renderAgents() {
+      const container = document.getElementById('list-agents');
+      container.innerHTML = '';
+      state.agents.forEach((agent, index) => {
+        const pill = document.createElement('div');
+        pill.className = 'pill';
+        pill.innerHTML = `<strong>${agent.matricule}</strong> — ${agent.nom} (${agent.role}) · ${agent.heures}h`;
+        const inc = document.createElement('button');
+        inc.textContent = '+1h';
+        inc.className = 'ghost small';
+        inc.addEventListener('click', () => {
+          state.agents[index].heures += 1;
+          saveState();
+          renderAgents();
+          logAction(`Heure ajoutée pour ${agent.matricule}.`);
+        });
+        pill.appendChild(inc);
+        container.appendChild(pill);
+      });
+      document.getElementById('count-agents').textContent = state.agents.length;
+    }
+
+    function renderDispatch() {
+      const container = document.getElementById('list-dispatch');
+      container.innerHTML = '';
+      state.dispatch.forEach((d, index) => {
+        const row = document.createElement('div');
+        row.className = 'timeline-item';
+        row.innerHTML = `<div><strong>${d.appel}</strong> · ${d.vehicule}<br><small>${d.equipe}</small></div>`;
+        const select = document.createElement('select');
+        ['Disponible', 'En mission', 'Indisponible'].forEach((s) => {
+          const opt = document.createElement('option');
+          opt.textContent = s;
+          opt.selected = s === d.statut;
+          select.appendChild(opt);
+        });
+        select.addEventListener('change', () => {
+          state.dispatch[index].statut = select.value;
+          saveState();
+          logAction(`Dispatch ${d.appel} mis à jour (${select.value}).`);
+        });
+        row.appendChild(select);
+        container.appendChild(row);
+      });
+      document.getElementById('count-dispatch').textContent = state.dispatch.filter(d => d.statut === 'En mission').length;
+    }
+
+    function renderRegles() {
+      const list = document.getElementById('list-regles');
+      list.innerHTML = '';
+      state.regles.forEach(r => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${r.titre}</strong> — ${r.detail}`;
+        list.appendChild(li);
+      });
+    }
+
+    function renderAmendes() {
+      const list = document.getElementById('list-amendes');
+      list.innerHTML = '';
+      state.amendes.forEach(a => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${a.motif}</span><span class="badge">${a.montant}€</span>`;
+        list.appendChild(li);
+      });
+    }
+
+    function renderCasierSelect() {
+      const select = document.querySelector('#form-casier select[name="amende"]');
+      select.innerHTML = '<option value="">Amende associée</option>';
+      state.amendes.forEach(a => {
+        const opt = document.createElement('option');
+        opt.value = a.motif;
+        opt.textContent = `${a.motif} (${a.montant}€)`;
+        select.appendChild(opt);
+      });
+    }
+
+    function renderCasiers() {
+      const table = document.getElementById('list-casiers');
+      table.innerHTML = '';
+      state.casiers.forEach(c => {
+        const row = document.createElement('div');
+        row.className = 'table-row';
+        row.innerHTML = `
+          <div>
+            <strong>${c.joueur}</strong><br>
+            <small>${c.fait}</small>
+          </div>
+          <div class="badge">${c.amende} — ${c.montant}€</div>
+          <div class="muted">${c.notes || '—'}</div>
+        `;
+        table.appendChild(row);
+      });
+      document.getElementById('count-casiers').textContent = state.casiers.length;
+    }
+
+    function renderAuditions() {
+      const list = document.getElementById('list-auditions');
+      list.innerHTML = '';
+      state.auditions.forEach(a => {
+        const item = document.createElement('div');
+        item.className = 'note';
+        item.innerHTML = `
+          <div class="note-header">${a.suspect} · ${a.date}</div>
+          <p>${a.resume}</p>
+          <div class="muted">Agent : ${a.agent}</div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function renderArchives() {
+      const list = document.getElementById('list-archives');
+      list.innerHTML = '';
+      state.archives.forEach(a => {
+        const item = document.createElement('div');
+        item.className = 'note';
+        item.innerHTML = `
+          <div class="note-header">${a.reference} · ${a.categorie}</div>
+          <p>${a.contenu}</p>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function renderTribunal() {
+      const list = document.getElementById('list-tribunal');
+      list.innerHTML = '';
+      state.tribunal.forEach(t => {
+        const item = document.createElement('div');
+        item.className = 'note';
+        item.innerHTML = `
+          <div class="note-header">${t.numero} · ${t.juge}</div>
+          <p>${t.objet}</p>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function renderFourriere() {
+      const list = document.getElementById('list-fourriere');
+      list.innerHTML = '';
+      state.fourriere.forEach((f, index) => {
+        const item = document.createElement('div');
+        item.className = 'timeline-item';
+        item.innerHTML = `
+          <div><strong>${f.plaque}</strong> — ${f.modele}<br><small>${f.motif}</small></div>
+          <div>
+            <span class="badge">${f.frais}€</span>
+            <select>
+              <option ${f.statut === 'En fourrière' ? 'selected' : ''}>En fourrière</option>
+              <option ${f.statut === 'Restitué' ? 'selected' : ''}>Restitué</option>
+            </select>
+          </div>
+        `;
+        const select = item.querySelector('select');
+        select.addEventListener('change', () => {
+          state.fourriere[index].statut = select.value;
+          saveState();
+          logAction(`Véhicule ${f.plaque} ${select.value.toLowerCase()}.`);
+        });
+        list.appendChild(item);
+      });
+    }
+
+    function renderLogs() {
+      const list = document.getElementById('list-logs');
+      list.innerHTML = '';
+      state.logs.forEach(l => {
+        const row = document.createElement('div');
+        row.className = 'log-item';
+        row.innerHTML = `<span>${l.date}</span><p>${l.texte}</p>`;
+        list.appendChild(row);
+      });
+    }
+
+    function renderAll() {
+      renderAgents();
+      renderDispatch();
+      renderRegles();
+      renderAmendes();
+      renderCasierSelect();
+      renderCasiers();
+      renderAuditions();
+      renderArchives();
+      renderTribunal();
+      renderFourriere();
+      renderLogs();
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
